@@ -4,18 +4,19 @@ const log = (msg) => console.log(msg);
 setUpPage();
 
 function setUpPage() {
-  let formRef = document.querySelector('#formWrapper');
-  formRef.addEventListener('submit', (event) => {
+  // let formRef = document.querySelector('#formWrapper');
+  oGameData.formRef = document.querySelector('#formWrapper');
+  oGameData.formRef.addEventListener('submit', (event) => {
     event.preventDefault();
     if (validateForm()) {
       startGame();
     }
   });
-
+  oGameData.gameField = document.querySelector('#gameField');
   let playAgainRef = document.querySelector('#playAgainBtn');
   playAgainRef.addEventListener('click', () => {
-    document.querySelector('#gameField').classList.add('d-none');
-    document.querySelector('#formWrapper').classList.remove('d-none');
+    oGameData.gameField.classList.add('d-none');
+    oGameData.formRef.classList.remove('d-none');
   });
 }
 
@@ -62,7 +63,7 @@ function validateForm() {
     }
     // errorMsg.textContent = '';
     oGameData.trainerName = nickRef.value;
-    document.querySelector('#formWrapper').classList.add('d-none');
+    oGameData.formRef.classList.add('d-none');
     return true;
   } catch (error) {
     console.log(error.message);
@@ -75,6 +76,13 @@ function validateForm() {
   }
 }
 
+function setupGame() {
+  for (let i = 0; i < 10; i++) {
+    let number = checkIfTaken(convertNumber());
+    createPokemon(number);
+  }
+}
+
 function startGame() {
   oGameData.init();
   document.querySelector('#highScore').classList.add('d-none');
@@ -82,14 +90,6 @@ function startGame() {
   let musicRef = document.querySelector('audio');
   musicRef.play();
   setupGame();
-}
-
-function setupGame() {
-  for (let i = 0; i < 10; i++) {
-    let number = checkIfTaken(convertNumber());
-    console.log(number);
-    createPokemon(number);
-  }
 }
 
 function convertNumber() {
@@ -116,7 +116,7 @@ function checkIfTaken(number) {
 }
 
 function createPokemon(number) {
-  document.querySelector('#gameField').classList.remove('d-none');
+  oGameData.gameField.classList.remove('d-none');
   let pokemonRef = document.createElement('img');
   pokemonRef.src = `./assets/pokemons/${number}.png`;
   pokemonRef.classList.add('pokemon');
@@ -127,34 +127,26 @@ function createPokemon(number) {
     ballRef.classList.toggle('d-none');
     checkForGameOver();
   });
-  document.querySelector('#gameField').append(pokemonRef);
+
+  oGameData.gameField.append(pokemonRef);
 
   let ballRef = document.createElement('img');
   ballRef.src = `./assets/ball.webp`;
   ballRef.classList.add('ball');
   ballRef.classList.add('d-none');
-  //   ballRef.style.width = '300px';
-  //   ballRef.style.height = '300px';
   ballRef.addEventListener('mouseover', () => {
     ballRef.classList.toggle('d-none');
     pokemonRef.classList.toggle('d-none');
   });
-  document.querySelector('#gameField').append(ballRef);
+  oGameData.gameField.append(ballRef);
 
+  giveRandomPos(pokemonRef);
+  giveRandomPos(ballRef);
   setInterval(() => {
-    let left = oGameData.getLeftPosition() + 'px';
-    let top = oGameData.getTopPosition() + 'px';
-
-    pokemonRef.style.left = left;
-    pokemonRef.style.top = top;
-    ballRef.style.left = left;
-    ballRef.style.top = top;
+    giveRandomPos(pokemonRef);
+    giveRandomPos(ballRef);
   }, 3000);
 }
-
-// function getPosition() {
-//   return Math.floor(Math.random() * 80) + 1;
-// }
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 151) + 1;
@@ -172,7 +164,6 @@ function checkForGameOver() {
       ball.classList.add('d-none');
     });
     oGameData.endTime = oGameData.endTimeInMilliseconds();
-    console.log('yay');
     displayHighScore();
   }
 }
@@ -186,7 +177,6 @@ function displayHighScore() {
   };
   let timeInMil = oGameData.nmbrOfMilliseconds();
   let timeInSec = parseInt(timeInMil / 1000);
-  console.log(timeInSec);
   document.querySelector('#highScore').classList.remove('d-none');
 
   let userObj = {
@@ -199,7 +189,6 @@ function displayHighScore() {
   }
 
   let highScores = JSON.parse(localStorage.getItem('highScores'));
-  console.log(highScores);
   if (!highScores.length) {
     highScores.push(userObj);
   } else {
@@ -229,4 +218,12 @@ function displayHighScore() {
     highScoreRef.textContent = textStr;
     highScoresRef.append(highScoreRef);
   });
+}
+
+function giveRandomPos(img) {
+  let left = oGameData.getLeftPosition() + 'px';
+  let top = oGameData.getTopPosition() + 'px';
+
+  img.style.left = left;
+  img.style.top = top;
 }
