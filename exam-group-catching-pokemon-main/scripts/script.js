@@ -76,6 +76,13 @@ function validateForm() {
   }
 }
 
+function setupGame() {
+  for (let i = 0; i < 10; i++) {
+    let number = checkIfTaken(convertNumber());
+    createPokemon(number);
+  }
+}
+
 function startGame() {
   oGameData.init();
   document.querySelector('#highScore').classList.add('d-none');
@@ -83,14 +90,6 @@ function startGame() {
   let musicRef = document.querySelector('audio');
   musicRef.play();
   setupGame();
-}
-
-function setupGame() {
-  for (let i = 0; i < 10; i++) {
-    let number = checkIfTaken(convertNumber());
-    console.log(number);
-    createPokemon(number);
-  }
 }
 
 function convertNumber() {
@@ -128,6 +127,7 @@ function createPokemon(number) {
     ballRef.classList.toggle('d-none');
     checkForGameOver();
   });
+
   oGameData.gameField.append(pokemonRef);
 
   let ballRef = document.createElement('img');
