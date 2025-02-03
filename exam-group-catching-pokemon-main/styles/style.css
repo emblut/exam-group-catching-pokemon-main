@@ -1,0 +1,55 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ser till så att bilderna får korrekt storlek och deras rörelse animeras */
+/* När ni sätter intervallen efter vilken pokemonen får sin nya position bör den intervallen överensstämma med tiden här. 3s. */
+
+img {
+  width: 300px;
+  transition: all 3s linear;
+}
+
+.form-wrapper {
+  background-image: url('../assets/background.png');
+  background-size: cover;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+    width: fit-content;
+    padding: 10px;
+    background-color: whitesmoke;
+}
+
+.d-none {
+  display: none;
+}
+
+.game-field {
+  width: 100%;
+  background-image: url('../assets/arena-background.png');
+  background-size: cover;
+  height: 100vh;
+}
+
+.pokemon {
+  position: absolute;
+}
+
+.ball {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+}
+
+.form-background {
+  width: 100%;
+}
